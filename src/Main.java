@@ -3,7 +3,14 @@ import java.util.Scanner;
 
 public class Main
 {
-    public static ArrayList<Job> Jobs;
+    private static ArrayList<Job> Jobs;
+    private static FirstLayer FirstLayer = new FirstLayer();
+    private static SecondLayer SecondLayer = new SecondLayer();
+    private static ArrayList<Job> CompletedJobs = new ArrayList<>();
+
+    private static int k = 10;
+    private static int intervalToMoveJobsToSecondLayer = 10;
+    private static int remainedTimeToCheckMovingJobsToSecondLayer = 0;
 
     public static void main(String[] args)
     {
@@ -21,5 +28,45 @@ public class Main
         int t = scanner.nextInt();
 
         Jobs = JobCreator.CreateJobs(n, x, y);
+        ExecuteSimulation(t);
+    }
+
+    private static void ExecuteSimulation(int t)
+    {
+        for (int i = 0; i < t; i++)
+        {
+            AddArrivedJobsToFirstLayer(i);
+            CheckAddingJobsFromFirstLayerToSecondLayer();
+        }
+    }
+
+    private static void AddArrivedJobsToFirstLayer(int currentTime)
+    {
+        ArrayList<Job> arrivedJobs = new ArrayList<>();
+        for (Job job : Jobs)
+        {
+            if (job.getArrivalTime() == currentTime)
+            {
+                arrivedJobs.add(job);
+            }
+        }
+        FirstLayer.AddJobsToThisLayer(arrivedJobs);
+        Jobs.removeAll(arrivedJobs);
+    }
+
+    private static void CheckAddingJobsFromFirstLayerToSecondLayer() //JobLoader in project document
+    {
+        if (remainedTimeToCheckMovingJobsToSecondLayer == 0)
+        {
+            if (SecondLayer.GetNumberOfJobsInThisLayer() < k)
+            {
+                SecondLayer.AddJobsToThisLayer(FirstLayer.GetHighestPriorityJobsInThisLayer(k));
+            }
+            remainedTimeToCheckMovingJobsToSecondLayer = intervalToMoveJobsToSecondLayer;
+        }
+        else
+        {
+            remainedTimeToCheckMovingJobsToSecondLayer --;
+        }
     }
 }
