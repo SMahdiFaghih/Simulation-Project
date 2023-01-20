@@ -6,6 +6,7 @@ public class Main
     private static ArrayList<Job> Jobs;
     private static FirstLayer FirstLayer = new FirstLayer();
     private static SecondLayer SecondLayer = new SecondLayer();
+    private static JobExecutor JobExecutor = new JobExecutor();
     private static ArrayList<Job> CompletedJobs = new ArrayList<>();
 
     private static int k = 10;
@@ -28,6 +29,12 @@ public class Main
         int t = scanner.nextInt();
 
         Jobs = JobCreator.CreateJobs(n, x, y);
+        System.out.println("Created Jobs info (Number, ArrivalTime, ServiceTime, Priority)");
+        for (int i = 0; i < Jobs.size(); i++)
+        {
+            System.out.println((i + 1) + ". " + Jobs.get(i).getArrivalTime() + " " + Jobs.get(i).getServiceTime() + " " + Jobs.get(i).getPriority());
+        }
+
         ExecuteSimulation(t);
     }
 
@@ -37,6 +44,7 @@ public class Main
         {
             AddArrivedJobsToFirstLayer(i);
             CheckAddingJobsFromFirstLayerToSecondLayer();
+            CheckJobExecutor();
         }
     }
 
@@ -66,7 +74,39 @@ public class Main
         }
         else
         {
-            remainedTimeToCheckMovingJobsToSecondLayer --;
+            remainedTimeToCheckMovingJobsToSecondLayer--;
+        }
+    }
+
+    private static void CheckJobExecutor()
+    {
+        Job completedJob = JobExecutor.CheckIfJobIsCompleted();
+        if (completedJob != null)
+        {
+            CompletedJobs.add(completedJob);
+        }
+
+        Job timeOutJob = JobExecutor.CheckIfJobQuantumTimeIsOver();
+        if (timeOutJob != null)
+        {
+            JobQueueType jobQueueType = JobExecutor.GetExecutingJobQueueType();
+            if (jobQueueType == JobQueueType.RoundRobinT1)
+            {
+                SecondLayer.AddJobToRoundRobinT2Queue(timeOutJob);
+            }
+            else if (jobQueueType == JobQueueType.RoundRobinT2)
+            {
+                SecondLayer.AddJobToFCFSQueue(timeOutJob);
+            }
+        }
+
+        if (!JobExecutor.IsExecutingJob())
+        {
+            JobQueue queueToSelectNextJobToExecute = SecondLayer.SelectJobQueueToExecute();
+            if (queueToSelectNextJobToExecute != null)
+            {
+                JobExecutor.setExecutingJob(queueToSelectNextJobToExecute);
+            }
         }
     }
 }
