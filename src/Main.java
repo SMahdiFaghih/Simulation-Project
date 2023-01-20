@@ -109,7 +109,12 @@ public class Main
             JobQueue queueToSelectNextJobToExecute = SecondLayer.SelectJobQueueToExecute();
             if (queueToSelectNextJobToExecute != null)
             {
+                System.out.println("Selected next Job to execute from " + queueToSelectNextJobToExecute.GetJobQueueType() + " queue");
                 JobExecutor.setExecutingJob(queueToSelectNextJobToExecute);
+            }
+            else
+            {
+                System.out.println("JobExecutor is free but there is no job in SecondLayer to execute!");
             }
         }
     }

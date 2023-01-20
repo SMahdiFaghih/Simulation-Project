@@ -1,10 +1,13 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 public class SecondLayer
 {
     private JobQueue RoundRobinT1 = new JobQueue(JobQueueType.RoundRobinT1, 5);
     private JobQueue RoundRobinT2 = new JobQueue(JobQueueType.RoundRobinT2, 10);
     private JobQueue FCFS = new JobQueue(JobQueueType.FCFS, 0);
+
+    private static final Random _random = new Random();
 
     public int GetNumberOfJobsInThisLayer()
     {
@@ -18,6 +21,29 @@ public class SecondLayer
 
     public JobQueue SelectJobQueueToExecute() //Dispatcher in project document
     {
+        float randomValue = _random.nextFloat();
+        if (randomValue < 0.8)
+        {
+            if (RoundRobinT1.GetQueueSize() > 0)
+            {
+                return RoundRobinT1;
+            }
+        }
+        else if (randomValue < 0.9)
+        {
+            if (RoundRobinT2.GetQueueSize() > 0)
+            {
+                return RoundRobinT2;
+            }
+        }
+        else
+        {
+            if (FCFS.GetQueueSize() > 0)
+            {
+                return FCFS;
+            }
+        }
+
         if (RoundRobinT1.GetQueueSize() > 0)
         {
             return RoundRobinT1;

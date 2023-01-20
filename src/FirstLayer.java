@@ -41,7 +41,7 @@ public class FirstLayer
             job.DecreaseRemainedExpireTime();
             if (job.getRemainedTimeToExpire() == 0)
             {
-                System.out.println("Job Expired is First Layer in PriorityQueue!");
+                System.out.println("Job Expired in First Layer in PriorityQueue!");
                 expiredJobs.add(job);
             }
         }
