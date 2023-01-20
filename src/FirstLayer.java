@@ -32,4 +32,19 @@ public class FirstLayer
 
         return selectedJobs;
     }
+
+    public void CheckExpiredJobs()
+    {
+        ArrayList<Job> expiredJobs = new ArrayList<>();
+        for (Job job : PriorityQueue)
+        {
+            job.DecreaseRemainedExpireTime();
+            if (job.getRemainedTimeToExpire() == 0)
+            {
+                System.out.println("Job Expired is First Layer in PriorityQueue!");
+                expiredJobs.add(job);
+            }
+        }
+        PriorityQueue.removeAll(expiredJobs);
+    }
 }

@@ -43,4 +43,19 @@ public class JobQueue
     {
         return JobQueueType;
     }
+
+    public void CheckExpiredJobs()
+    {
+        ArrayList<Job> expiredJobs = new ArrayList<>();
+        for (Job job : Jobs)
+        {
+            job.DecreaseRemainedExpireTime();
+            if (job.getRemainedTimeToExpire() == 0)
+            {
+                System.out.println("Job Expired in Second Layer in " + JobQueueType + " queue!");
+                expiredJobs.add(job);
+            }
+        }
+        Jobs.removeAll(expiredJobs);
+    }
 }

@@ -20,7 +20,7 @@ public class Main
         System.out.println("Enter parameters X, Y, Z in the given order");
         int x = scanner.nextInt();
         float y = scanner.nextFloat();
-        int z = scanner.nextInt();
+        float z = scanner.nextFloat();
 
         System.out.println("Enter number of jobs");
         int n = scanner.nextInt();
@@ -28,12 +28,13 @@ public class Main
         System.out.println("Enter simulation time in seconds");
         int t = scanner.nextInt();
 
-        Jobs = JobCreator.CreateJobs(n, x, y);
-        System.out.println("Created Jobs info (Number, ArrivalTime, ServiceTime, Priority)");
+        Jobs = JobCreator.CreateJobs(n, x, y, z);
+        System.out.println("Created Jobs info (Number, ArrivalTime, ServiceTime, Priority, ExpireTime)");
         for (int i = 0; i < Jobs.size(); i++)
         {
-            System.out.println((i + 1) + ". " + Jobs.get(i).getArrivalTime() + " " + Jobs.get(i).getServiceTime() + " " + Jobs.get(i).getPriority());
+            System.out.println((i + 1) + ". " + Jobs.get(i).getArrivalTime() + " " + Jobs.get(i).getServiceTime() + " " + Jobs.get(i).getPriority() + " " + Jobs.get(i).getRemainedTimeToExpire());
         }
+        System.out.println();
 
         ExecuteSimulation(t);
     }
@@ -45,6 +46,9 @@ public class Main
             AddArrivedJobsToFirstLayer(i);
             CheckAddingJobsFromFirstLayerToSecondLayer();
             CheckJobExecutor();
+            CheckExpiredJobs();
+
+            System.out.println(i + " " + Jobs.size() + " " + CompletedJobs.size());
         }
     }
 
@@ -108,5 +112,11 @@ public class Main
                 JobExecutor.setExecutingJob(queueToSelectNextJobToExecute);
             }
         }
+    }
+
+    private static void CheckExpiredJobs()
+    {
+        FirstLayer.CheckExpiredJobs();
+        SecondLayer.CheckExpiredJobs();
     }
 }

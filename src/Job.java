@@ -3,16 +3,20 @@ public class Job
     private int ArrivalTime;
     private int ServiceTime;
     private JobPriority Priority;
+    private int ExpireTime;
 
     private int RemainedExecutionTime;
+    private int RemainedTimeToExpire;
 
-    public Job(int arrivalTime, int serviceTime, JobPriority jobPriority)
+    public Job(int arrivalTime, int serviceTime, JobPriority jobPriority, int expireTime)
     {
         ArrivalTime = arrivalTime;
         ServiceTime = serviceTime;
         Priority = jobPriority;
+        ExpireTime = expireTime;
 
         RemainedExecutionTime = serviceTime;
+        RemainedTimeToExpire = expireTime;
     }
 
     public int getArrivalTime()
@@ -38,5 +42,15 @@ public class Job
     public int getRemainedExecutionTime()
     {
         return RemainedExecutionTime;
+    }
+
+    public void DecreaseRemainedExpireTime()
+    {
+        RemainedTimeToExpire --;
+    }
+
+    public int getRemainedTimeToExpire()
+    {
+        return RemainedTimeToExpire ;
     }
 }

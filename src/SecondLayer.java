@@ -43,4 +43,11 @@ public class SecondLayer
     {
         FCFS.AddJobToThisLayer(job);
     }
+
+    public void CheckExpiredJobs()
+    {
+        RoundRobinT1.CheckExpiredJobs();
+        RoundRobinT2.CheckExpiredJobs();
+        FCFS.CheckExpiredJobs();
+    }
 }
