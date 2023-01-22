@@ -16,6 +16,7 @@ public class SecondLayer
 
     public void AddJobsToThisLayer(ArrayList<Job> jobs)
     {
+        System.out.println("Adding " + jobs.size() + " job(s) from FirstLayer to the SecondLayer");
         RoundRobinT1.AddJobsToThisLayer(jobs);
     }
 

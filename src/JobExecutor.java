@@ -21,7 +21,9 @@ public class JobExecutor
         ExecutingJob.DecreaseRemainedExecutionTime();
         if (ExecutingJob.getRemainedExecutionTime() == 0)
         {
-            return ExecutingJob;
+            Job job = ExecutingJob;
+            ExecutingJob = null;
+            return job;
         }
 
         return null;

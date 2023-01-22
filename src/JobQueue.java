@@ -21,6 +21,7 @@ public class JobQueue
     {
         Job job = Jobs.get(0);
         Jobs.remove(job);
+        System.out.println("Selected Job has ID " + job.getID());
         return job;
     }
 
@@ -52,7 +53,7 @@ public class JobQueue
             job.DecreaseRemainedExpireTime();
             if (job.getRemainedTimeToExpire() == 0)
             {
-                System.out.println("Job Expired in Second Layer in " + JobQueueType + " queue!");
+                System.out.println("Job with ID " + job.getID() + " Expired in Second Layer in " + JobQueueType + " queue!");
                 expiredJobs.add(job);
             }
         }

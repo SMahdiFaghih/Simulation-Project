@@ -30,9 +30,9 @@ public class Main
 
         Jobs = JobCreator.CreateJobs(n, x, y, z);
         System.out.println("Created Jobs info (Number, ArrivalTime, ServiceTime, Priority, ExpireTime)");
-        for (int i = 0; i < Jobs.size(); i++)
+        for (Job job : Jobs)
         {
-            System.out.println((i + 1) + ". " + Jobs.get(i).getArrivalTime() + " " + Jobs.get(i).getServiceTime() + " " + Jobs.get(i).getPriority() + " " + Jobs.get(i).getRemainedTimeToExpire());
+            System.out.println(job.getID() + ". " + job.getArrivalTime() + " " + job.getServiceTime() + " " + job.getPriority() + " " + job.getExpireTime());
         }
         System.out.println();
 
@@ -43,12 +43,11 @@ public class Main
     {
         for (int i = 0; i < t; i++)
         {
+            System.out.println("************************************ Time: " + i);
             AddArrivedJobsToFirstLayer(i);
             CheckAddingJobsFromFirstLayerToSecondLayer();
             CheckJobExecutor();
             CheckExpiredJobs();
-
-            System.out.println(i + " " + Jobs.size() + " " + CompletedJobs.size());
         }
     }
 
@@ -59,6 +58,7 @@ public class Main
         {
             if (job.getArrivalTime() == currentTime)
             {
+                System.out.println("Job with ID " + job.getID() + " has arrived and is added into the FirstLayer");
                 arrivedJobs.add(job);
             }
         }
@@ -87,6 +87,7 @@ public class Main
         Job completedJob = JobExecutor.CheckIfJobIsCompleted();
         if (completedJob != null)
         {
+            System.out.println("Job with ID " + completedJob.getID() + " completed");
             CompletedJobs.add(completedJob);
         }
 
@@ -94,6 +95,7 @@ public class Main
         if (timeOutJob != null)
         {
             JobQueueType jobQueueType = JobExecutor.GetExecutingJobQueueType();
+            System.out.println("Job with ID " + timeOutJob.getID() + " timeout in " + jobQueueType + " queue and will be moved to the next queue");
             if (jobQueueType == JobQueueType.RoundRobinT1)
             {
                 SecondLayer.AddJobToRoundRobinT2Queue(timeOutJob);

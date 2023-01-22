@@ -9,10 +9,10 @@ public class JobCreator
     {
         ArrayList<Job> jobs = new ArrayList<>();
 
-        jobs.add(new Job(0, GenerateServiceTime(y), GenerateJobPriority(), GenerateExpireTime(z))); //First job arrives at 0
+        jobs.add(new Job(1, 0, GenerateServiceTime(y), GenerateJobPriority(), GenerateExpireTime(z))); //First job arrives at 0
         for (int i = 1; i < n; i++)
         {
-            jobs.add(new Job(jobs.get(i - 1).getArrivalTime() + GenerateInterArrivalTime(x), GenerateServiceTime(y), GenerateJobPriority(), GenerateExpireTime(z)));
+            jobs.add(new Job(i + 1,jobs.get(i - 1).getArrivalTime() + GenerateInterArrivalTime(x), GenerateServiceTime(y), GenerateJobPriority(), GenerateExpireTime(z)));
         }
         return jobs;
     }
