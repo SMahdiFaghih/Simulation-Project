@@ -4,6 +4,8 @@ public class JobExecutor
     private int RemainedQuantumTime;
     private JobQueueType ExecutingJobQueueType;
 
+    private int TotalExecutingTime = 0;
+
     public void setExecutingJob(JobQueue jobQueue)
     {
         ExecutingJob = jobQueue.GetNextJobToExecute();
@@ -53,5 +55,15 @@ public class JobExecutor
     public JobQueueType GetExecutingJobQueueType()
     {
         return ExecutingJobQueueType;
+    }
+
+    public void IncreaseTotalExecutingTime()
+    {
+        TotalExecutingTime++;
+    }
+
+    public int getTotalExecutingTime()
+    {
+        return TotalExecutingTime;
     }
 }

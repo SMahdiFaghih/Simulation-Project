@@ -3,6 +3,7 @@ import java.util.ArrayList;
 public class FirstLayer
 {
     private ArrayList<Job> PriorityQueue = new ArrayList<>();
+    private int CumulativeQueueLength;
 
     public void AddJobsToThisLayer(ArrayList<Job> jobs)
     {
@@ -33,11 +34,12 @@ public class FirstLayer
         return selectedJobs;
     }
 
-    public void CheckExpiredJobs()
+    public ArrayList<Job> CheckExpiredJobs()
     {
         ArrayList<Job> expiredJobs = new ArrayList<>();
         for (Job job : PriorityQueue)
         {
+            job.IncreaseWaitTimeInQueue(JobQueueType.FirstLayer);
             job.DecreaseRemainedExpireTime();
             if (job.getRemainedTimeToExpire() == 0)
             {
@@ -46,5 +48,16 @@ public class FirstLayer
             }
         }
         PriorityQueue.removeAll(expiredJobs);
+        return expiredJobs;
+    }
+
+    public void StoreQueueLength()
+    {
+        CumulativeQueueLength += PriorityQueue.size();
+    }
+
+    public void PrintAverageQueueLength(int t)
+    {
+        System.out.println("FirstLayer Average queue length is: " + 1f * CumulativeQueueLength / t);
     }
 }

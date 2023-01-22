@@ -14,6 +14,14 @@ public class JobCreator
         {
             jobs.add(new Job(i + 1,jobs.get(i - 1).getArrivalTime() + GenerateInterArrivalTime(x), GenerateServiceTime(y), GenerateJobPriority(), GenerateExpireTime(z)));
         }
+
+        System.out.println("Created Jobs info (Number, ArrivalTime, ServiceTime, Priority, ExpireTime)");
+        for (Job job : jobs)
+        {
+            System.out.println(job.getID() + ". " + job.getArrivalTime() + " " + job.getServiceTime() + " " + job.getPriority() + " " + job.getExpireTime());
+        }
+        System.out.println();
+
         return jobs;
     }
 

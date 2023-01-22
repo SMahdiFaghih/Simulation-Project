@@ -71,10 +71,26 @@ public class SecondLayer
         FCFS.AddJobToThisLayer(job);
     }
 
-    public void CheckExpiredJobs()
+    public ArrayList<Job> CheckExpiredJobs()
     {
-        RoundRobinT1.CheckExpiredJobs();
-        RoundRobinT2.CheckExpiredJobs();
-        FCFS.CheckExpiredJobs();
+        ArrayList<Job> expiredJobs = new ArrayList<>();
+        expiredJobs.addAll(RoundRobinT1.CheckExpiredJobs());
+        expiredJobs.addAll(RoundRobinT2.CheckExpiredJobs());
+        expiredJobs.addAll(FCFS.CheckExpiredJobs());
+        return expiredJobs;
+    }
+
+    public void StoreQueueLength()
+    {
+        RoundRobinT1.StoreQueueLength();
+        RoundRobinT2.StoreQueueLength();
+        FCFS.StoreQueueLength();
+    }
+
+    public void PrintAverageQueueLength(int t)
+    {
+        RoundRobinT1.PrintAverageQueueLength(t);
+        RoundRobinT2.PrintAverageQueueLength(t);
+        FCFS.PrintAverageQueueLength(t);
     }
 }

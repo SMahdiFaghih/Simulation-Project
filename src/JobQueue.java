@@ -6,6 +6,8 @@ public class JobQueue
     private ArrayList<Job> Jobs = new ArrayList<>();
     private int QuantumTime;
 
+    private int CumulativeQueueLength;
+
     public JobQueue(JobQueueType jobQueueType, int quantumTime)
     {
         JobQueueType = jobQueueType;
@@ -45,11 +47,12 @@ public class JobQueue
         return JobQueueType;
     }
 
-    public void CheckExpiredJobs()
+    public ArrayList<Job> CheckExpiredJobs()
     {
         ArrayList<Job> expiredJobs = new ArrayList<>();
         for (Job job : Jobs)
         {
+            job.IncreaseWaitTimeInQueue(JobQueueType);
             job.DecreaseRemainedExpireTime();
             if (job.getRemainedTimeToExpire() == 0)
             {
@@ -58,5 +61,16 @@ public class JobQueue
             }
         }
         Jobs.removeAll(expiredJobs);
+        return expiredJobs;
+    }
+
+    public void StoreQueueLength()
+    {
+        CumulativeQueueLength += Jobs.size();
+    }
+
+    public void PrintAverageQueueLength(int t)
+    {
+        System.out.println(JobQueueType + " Average queue length is: " + 1f * CumulativeQueueLength / t);
     }
 }

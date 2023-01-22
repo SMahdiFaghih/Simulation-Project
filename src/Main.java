@@ -8,6 +8,7 @@ public class Main
     private static SecondLayer SecondLayer = new SecondLayer();
     private static JobExecutor JobExecutor = new JobExecutor();
     private static ArrayList<Job> CompletedJobs = new ArrayList<>();
+    private static ArrayList<Job> ExpiredJobs = new ArrayList<>();
 
     private static int k = 10;
     private static int intervalToMoveJobsToSecondLayer = 10;
@@ -29,14 +30,8 @@ public class Main
         int t = scanner.nextInt();
 
         Jobs = JobCreator.CreateJobs(n, x, y, z);
-        System.out.println("Created Jobs info (Number, ArrivalTime, ServiceTime, Priority, ExpireTime)");
-        for (Job job : Jobs)
-        {
-            System.out.println(job.getID() + ". " + job.getArrivalTime() + " " + job.getServiceTime() + " " + job.getPriority() + " " + job.getExpireTime());
-        }
-        System.out.println();
-
         ExecuteSimulation(t);
+        PrintRequiredLogs(n, t);
     }
 
     private static void ExecuteSimulation(int t)
@@ -48,6 +43,7 @@ public class Main
             CheckAddingJobsFromFirstLayerToSecondLayer();
             CheckJobExecutor();
             CheckExpiredJobs();
+            UpdateValuesRequiredToLogAtTheEnd();
         }
     }
 
@@ -95,7 +91,7 @@ public class Main
         if (timeOutJob != null)
         {
             JobQueueType jobQueueType = JobExecutor.GetExecutingJobQueueType();
-            System.out.println("Job with ID " + timeOutJob.getID() + " timeout in " + jobQueueType + " queue and will be moved to the next queue");
+            System.out.println("Job with ID " + timeOutJob.getID() + " selected from" + jobQueueType + " queue timed out and will be moved to the next queue");
             if (jobQueueType == JobQueueType.RoundRobinT1)
             {
                 SecondLayer.AddJobToRoundRobinT2Queue(timeOutJob);
@@ -114,16 +110,37 @@ public class Main
                 System.out.println("Selected next Job to execute from " + queueToSelectNextJobToExecute.GetJobQueueType() + " queue");
                 JobExecutor.setExecutingJob(queueToSelectNextJobToExecute);
             }
-            else
-            {
-                System.out.println("JobExecutor is free but there is no job in SecondLayer to execute!");
-            }
         }
     }
 
     private static void CheckExpiredJobs()
     {
-        FirstLayer.CheckExpiredJobs();
-        SecondLayer.CheckExpiredJobs();
+        ExpiredJobs.addAll(FirstLayer.CheckExpiredJobs());
+        ExpiredJobs.addAll(SecondLayer.CheckExpiredJobs());
+    }
+
+    private static void UpdateValuesRequiredToLogAtTheEnd()
+    {
+        FirstLayer.StoreQueueLength();
+        SecondLayer.StoreQueueLength();
+
+        if (JobExecutor.IsExecutingJob())
+        {
+            JobExecutor.IncreaseTotalExecutingTime();
+        }
+    }
+
+    private static void PrintRequiredLogs(int n, int t)
+    {
+        System.out.println();
+        FirstLayer.PrintAverageQueueLength(t);
+        SecondLayer.PrintAverageQueueLength(t);
+
+        Job.PrintAverageTimeSpentInQueues(n);
+
+        System.out.println();
+        System.out.println("CPU Efficiency is: " + 100f * JobExecutor.getTotalExecutingTime() / t + "%");
+        System.out.println("Expired Jobs Percentage is: " + 100f * (ExpiredJobs.size()) / n + "%");
+        System.out.println("Completed Jobs Percentage is: " + 100f * (CompletedJobs.size()) / n + "%");
     }
 }
